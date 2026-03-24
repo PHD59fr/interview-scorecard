@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interview Scorecard</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div class="toolbar" style="justify-content: space-between;">
+        <div>
+          <h1 style="margin:0 0 8px 0;">Interview Scorecard</h1>
+          <p style="margin:0;">Load a questionnaire, run the interview, then export a summary that can be shared with HR.</p>
+        </div>
+        <div class="toolbar" style="margin:0;">
+          <button id="openEditorBtn" type="button">Open questionnaire editor</button>
+          <button id="backToInterviewBtn" type="button" style="display:none;">Back to questionnaire</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="interviewView">
+      <div class="toolbar">
+        <input type="file" id="configFileInput" accept=".json,application/json" />
+        <button id="loadConfigBtn" type="button">Refresh</button>
+        <span class="muted" id="loadStatus"></span>
+      </div>
+
+      <div id="app">
+        <div class="card">
+          <h2>Waiting</h2>
+          <p>Select a questionnaire file — it will load automatically.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="editorView" style="display:none;">
+      <div class="editor-grid">
+        <section class="card">
+          <h2>Questionnaire editor</h2>
+
+          <div class="toolbar">
+            <input type="file" id="fileInput" accept=".json,application/json" />
+            <button id="newQuestionnaireBtn" type="button">New questionnaire</button>
+            <button id="exportBtn" type="button">Export questionnaire</button>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-row">
+              <label for="titleInput">Title</label>
+              <input type="text" id="titleInput" placeholder="E.g. Linux Systems & DevOps Engineer Interview" />
+            </div>
+
+            <div class="form-row">
+              <label for="subtitleInput">Subtitle</label>
+              <textarea id="subtitleInput" placeholder="E.g. Evaluation questionnaire for recruiter or tech lead"></textarea>
+            </div>
+
+            <div class="list-box">
+              <div class="toolbar" style="justify-content: space-between;">
+                <h3 style="margin:0;">Sections</h3>
+                <button id="addSectionBtn" type="button">Add section</button>
+              </div>
+              <div id="sectionsList" class="field-grid"></div>
+            </div>
+          </div>
+
+          <div id="editorStatus" class="status">Ready.</div>
+        </section>
+
+        <section class="card preview">
+          <h2>Preview</h2>
+          <div id="preview"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
