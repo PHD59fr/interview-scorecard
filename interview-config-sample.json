@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "title": "Customer Service Mini Assessment",
+    "subtitle": "Short evaluation focused on communication, problem-solving, professionalism, and customer interaction",
+    "maxScorePerQuestion": 2
+  },
+  "grading": {
+    "labels": {
+      "0": "Incorrect",
+      "1": "Partial",
+      "2": "Correct"
+    },
+    "globalLevels": [
+      {
+        "min": 85,
+        "label": "Very strong"
+      },
+      {
+        "min": 70,
+        "label": "Good"
+      },
+      {
+        "min": 50,
+        "label": "Average / needs improvement"
+      },
+      {
+        "min": 0,
+        "label": "Insufficient"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "communication",
+      "title": "Communication",
+      "description": "Clarity, listening skills, and customer interaction",
+      "questions": [
+        {
+          "id": "q1",
+          "label": "Q1 - Active Listening",
+          "text": "Why is active listening important when speaking with a customer?",
+          "expectedAnswer": [
+            "Understand the customer clearly",
+            "Avoid misunderstandings",
+            "Build trust",
+            "Respond appropriately"
+          ]
+        },
+        {
+          "id": "q2",
+          "label": "Q2 - Clear Communication",
+          "text": "How would you explain a problem to a customer in a simple and professional way?",
+          "expectedAnswer": [
+            "Use clear language",
+            "Avoid jargon",
+            "Be polite",
+            "Explain the next steps"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "problem-solving",
+      "title": "Problem Solving",
+      "description": "Handling issues and finding solutions",
+      "questions": [
+        {
+          "id": "q3",
+          "label": "Q3 - Handling Complaints",
+          "text": "What should you do first when a customer is unhappy or complaining?",
+          "expectedAnswer": [
+            "Stay calm",
+            "Listen carefully",
+            "Acknowledge the issue",
+            "Look for a solution"
+          ]
+        },
+        {
+          "id": "q4",
+          "label": "Q4 - Finding a Solution",
+          "text": "What makes a good solution to a customer problem?",
+          "expectedAnswer": [
+            "It addresses the issue",
+            "It is realistic",
+            "It is explained clearly",
+            "It is delivered in a timely way"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "professionalism",
+      "title": "Professionalism",
+      "description": "Attitude, behavior, and responsibility",
+      "questions": [
+        {
+          "id": "q5",
+          "label": "Q5 - Professional Attitude",
+          "text": "What does professionalism mean in a customer-facing role?",
+          "expectedAnswer": [
+            "Respectful attitude",
+            "Punctuality",
+            "Polite communication",
+            "Responsibility"
+          ]
+        },
+        {
+          "id": "q6",
+          "label": "Q6 - Managing Pressure",
+          "text": "How would you stay professional during a stressful situation at work?",
+          "expectedAnswer": [
+            "Stay calm",
+            "Prioritize tasks",
+            "Communicate clearly",
+            "Focus on solutions"
+          ]
+        }
+      ]
+    }
+  ]
+}
