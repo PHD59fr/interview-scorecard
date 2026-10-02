@@ -12,10 +12,6 @@
     },
     "globalLevels": [
       {
-        "min": 85,
-        "label": "Very strong"
-      },
-      {
         "min": 70,
         "label": "Good"
       },

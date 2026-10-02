@@ -6,7 +6,7 @@
   --text: #e5e7eb;
   --accent: #38bdf8;
   --ok: #22c55e;
-  --warn: #f59e0b;
+  --warn: #eab308;
   --bad: #ef4444;
   --border: #334155;
 }
@@ -40,32 +40,16 @@ body {
   margin-bottom: 18px;
 }
 
+.hero .questionnaire-title {
+  margin: 0 0 8px 0;
+}
+
 h1,
 h2,
 h3,
 h4,
 p {
   margin-top: 0;
-}
-
-.header-toolbar {
-  align-items: flex-start;
-}
-
-.header-toolbar h1 {
-  margin: 0 0 8px 0;
-}
-
-.header-toolbar p {
-  margin: 0;
-}
-
-.view {
-  display: none;
-}
-
-.view.active {
-  display: block;
 }
 
 .layout {
@@ -106,9 +90,24 @@ p {
   border-top: 1px solid rgba(148, 163, 184, 0.18);
 }
 
-.question.score-2 { border-left: 4px solid var(--ok); padding-left: 10px; }
-.question.score-1 { border-left: 4px solid var(--warn); padding-left: 10px; }
-.question.score-0 { border-left: 4px solid var(--bad); padding-left: 10px; }
+.question.score-good { border-left: 4px solid var(--ok); padding-left: 10px; }
+.question.score-mid { border-left: 4px solid var(--warn); padding-left: 10px; }
+.question.score-bad { border-left: 4px solid var(--bad); padding-left: 10px; }
+
+/* Not a colour-only signal: the selected rating is also filled in. */
+.rating label:has(input:checked) {
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.16);
+  color: var(--accent);
+}
+
+.question.score-rated .rating label:not(:has(input:checked)) {
+  opacity: 0.55;
+}
+
+.question.score-unrated .rating {
+  opacity: 0.75;
+}
 
 .rating {
   display: flex;
@@ -127,6 +126,8 @@ p {
 
 textarea,
 input[type="text"],
+input[type="number"],
+input[type="date"],
 select {
   width: 100%;
   min-height: 44px;
@@ -180,6 +181,109 @@ summary {
   margin-top: 18px;
 }
 
+.chart-card {
+  margin-top: 18px;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: center;
+}
+
+.chart-grid .chart-verdict {
+  grid-column: 1 / -1;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Radar absent: verdict + ring share the right column still, but we take
+   the full width to match the new layout intent. */
+.chart-grid-no-radar {
+  grid-template-columns: 1fr;
+}
+
+.chart-grid-full {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* When there is a radar, the stack lives in the second column. */
+.chart-verdict {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chart-box-ring {
+  position: relative;
+  height: 300px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-verdict {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chart-verdict-caption {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.chart-verdict-rate {
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.chart-verdict-level {
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+.chart-verdict-level.level-good {
+  color: var(--ok);
+}
+
+.chart-verdict-level.level-mid {
+  color: var(--warn);
+}
+
+.chart-verdict-level.level-bad {
+  color: var(--bad);
+}
+
+/* Chart.js needs a sized container to measure itself against. */
+.chart-box {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+.recap-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.recap-meta label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -202,6 +306,31 @@ th {
   background: #0b1220;
 }
 
+/* Status column of the recap: one tinted band per row, so the column reads as a
+   single strip. Derived from the score, not from the label wording. */
+.recap-table td.status {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.recap-table td.status-good {
+  background: color-mix(in srgb, var(--ok) 18%, transparent);
+}
+
+.recap-table td.status-mid {
+  background: color-mix(in srgb, var(--warn) 22%, transparent);
+}
+
+.recap-table td.status-bad {
+  background: color-mix(in srgb, var(--bad) 18%, transparent);
+}
+
+.recap-table td.status-none {
+  background: color-mix(in srgb, var(--muted) 12%, transparent);
+  color: var(--muted);
+  font-weight: 400;
+}
+
 .muted {
   color: var(--muted);
 }
@@ -214,13 +343,35 @@ th {
   align-items: center;
 }
 
-.toolbar-between {
-  justify-content: space-between;
+.csv-separator-dialog {
+  width: min(420px, calc(100vw - 32px));
+  color: var(--text);
+  background: #172033;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
 }
 
-button,
-.button,
-a.button {
+.csv-separator-dialog::backdrop {
+  background: rgba(2, 6, 23, 0.72);
+}
+
+.csv-separator-dialog h3 {
+  margin: 0 0 8px;
+}
+
+.csv-separator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 12px;
+}
+
+.dialog-cancel {
+  background: transparent;
+}
+
+button {
   border: 1px solid var(--border);
   background: #0b1220;
   color: var(--text);
@@ -233,15 +384,13 @@ a.button {
   align-items: center;
 }
 
-button.secondary,
-.button.secondary {
-  background: rgba(56, 189, 248, 0.12);
-  border-color: rgba(56, 189, 248, 0.4);
+button:hover {
+  border-color: var(--accent);
 }
 
-button.active-nav {
-  background: rgba(56, 189, 248, 0.18);
-  border-color: var(--accent);
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 input[type="file"] {
@@ -261,13 +410,10 @@ input[type="file"] {
 }
 
 .preview {
-  min-height: 900px;
-  max-height: none;
-  overflow: visible;
-}
-
-#editorView .card {
-  height: 100%;
+  position: sticky;
+  top: 12px;
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
 }
 
 .status {
@@ -287,6 +433,50 @@ input[type="file"] {
 .form-row {
   display: grid;
   gap: 8px;
+}
+
+.grading-labels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.grading-label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.grading-label input {
+  min-width: 0;
+}
+
+.global-levels-editor {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.global-level {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.45fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.global-level label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.global-level input {
+  min-width: 0;
 }
 
 .inline-grid {
@@ -335,11 +525,19 @@ input[type="file"] {
 @media (max-width: 1080px) {
   .layout,
   .editor-grid,
-  .inline-grid {
+  .inline-grid,
+  .global-level,
+  .chart-grid {
     grid-template-columns: 1fr;
   }
 
-  .summary {
+  .summary,
+  .preview {
     position: static;
+  }
+
+  .preview {
+    max-height: none;
+    overflow: visible;
   }
 }

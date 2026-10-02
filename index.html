@@ -24,7 +24,7 @@
     <div id="interviewView">
       <div class="toolbar">
         <input type="file" id="configFileInput" accept=".json,application/json" />
-        <button id="loadConfigBtn" type="button">Refresh</button>
+        <button id="loadConfigBtn" type="button">Rebuild scorecard</button>
         <span class="muted" id="loadStatus"></span>
       </div>
 
@@ -56,6 +56,27 @@
             <div class="form-row">
               <label for="subtitleInput">Subtitle</label>
               <textarea id="subtitleInput" placeholder="E.g. Evaluation questionnaire for recruiter or tech lead"></textarea>
+            </div>
+
+            <div class="form-row">
+              <label for="maxScoreInput">Max score per question</label>
+              <input type="number" id="maxScoreInput" min="1" max="10" step="1" />
+              <div class="helper">Between 1 and 10. Rating buttons and score totals are derived from this value.</div>
+            </div>
+
+            <div class="list-box">
+              <h3 style="margin:0 0 6px;">Scoring labels</h3>
+              <div class="helper">These values are saved in <code>grading.labels</code> in the questionnaire JSON.</div>
+              <div id="gradingLabelsEditor" class="grading-labels-grid"></div>
+            </div>
+
+            <div class="list-box">
+              <div class="toolbar" style="justify-content: space-between;">
+                <h3 style="margin:0;">Overall levels</h3>
+                <button id="addGlobalLevelBtn" type="button">Add level</button>
+              </div>
+              <div class="helper">Set the minimum percentage and label for each overall level. The 0% level is always kept.</div>
+              <div id="globalLevelsEditor" class="global-levels-editor"></div>
             </div>
 
             <div class="list-box">
