@@ -1023,17 +1023,28 @@ function buildInterviewUI(config) {
           ticks: { stepSize: 25, display: false, backdropColor: 'transparent' },
           angleLines: { color: colors.grid },
           grid: { color: colors.grid },
-          pointLabels: { color: colors.text, font: { size: 11 } }
+          pointLabels: {
+            color: colors.text,
+            font: { size: 12, weight: '600' },
+            padding: 10
+          }
         }
       },
       plugins: {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            title: (items) => result.byDomain[items[0].dataIndex].domain,
+            /* Read the current scorecard when hovering, rather than keeping
+               the aggregate from the chart's initial render. */
+            title: (items) => {
+              const domain = collectResult().byDomain[items[0] && items[0].dataIndex];
+              return domain ? domain.domain : '';
+            },
             label: (context) => {
-              const domain = result.byDomain[context.dataIndex];
-              return domain.score + ' / ' + domain.max + ' (' + domain.percent + '%) - ' + domain.level;
+              const domain = collectResult().byDomain[context.dataIndex];
+              return domain
+                ? domain.score + ' / ' + domain.max + ' (' + domain.percent + '%) - ' + domain.level
+                : '';
             }
           }
         }
@@ -1073,8 +1084,12 @@ function buildInterviewUI(config) {
         tooltip: {
           callbacks: {
             label: (context) => {
-              const slice = distribution[context.dataIndex];
-              const total = result.summary.totalQuestions;
+              /* Same rule as the radar tooltip: avoid the distribution from a
+                 previous draw becoming visible while the ring itself is new. */
+              const currentResult = collectResult();
+              const slice = gradeDistribution(currentResult.responses, maxScore, labels)[context.dataIndex];
+              const total = currentResult.summary.totalQuestions;
+              if (!slice) return '';
               const pct = total ? Math.round((slice.count / total) * 100) : 0;
               return slice.name + ': ' + slice.count + ' (' + pct + '%)';
             }
@@ -1085,6 +1100,7 @@ function buildInterviewUI(config) {
 
     if (domainChartInstance) {
       domainChartInstance.data = radarData;
+      domainChartInstance.options = radarOptions;
       domainChartInstance.update();
     } else {
       domainChartInstance = new Chart(radarCanvas, { type: 'radar', data: radarData, options: radarOptions });
@@ -1092,6 +1108,8 @@ function buildInterviewUI(config) {
 
     if (ringChartInstance) {
       ringChartInstance.data = ringData;
+      /* Same principle for the answer-breakdown percentage in its tooltip. */
+      ringChartInstance.options = ringOptions;
       ringChartInstance.update();
     } else {
       ringChartInstance = new Chart(ringCanvas, { type: 'doughnut', data: ringData, options: ringOptions });
@@ -1456,8 +1474,9 @@ function buildInterviewUI(config) {
 
   function update() {
     const questions = [...document.querySelectorAll('#app .question')];
-    let answered = 0;
-    let totalScore = 0;
+    const result = collectResult();
+    const answered = result.responses.filter((response) => response.points !== null).length;
+    const totalScore = result.summary.totalScore;
     const weaknesses = [];
 
     questions.forEach((questionEl) => {
@@ -1469,8 +1488,6 @@ function buildInterviewUI(config) {
       });
 
       if (score !== null) {
-        answered += 1;
-        totalScore += score;
         questionEl.classList.add('score-rated');
         questionEl.classList.add('score-' + scoreBand(score, maxScore));
         if (isWeakScore(score, maxScore)) {
@@ -1481,7 +1498,7 @@ function buildInterviewUI(config) {
       }
     });
 
-    const ratio = totalMax ? Math.round((totalScore / totalMax) * 100) : 0;
+    const ratio = result.summary.ratio;
     document.getElementById('totalScore').textContent = totalScore + ' / ' + totalMax;
     document.getElementById('answeredCount').textContent = answered + ' / ' + totalQuestions;
     document.getElementById('ratio').textContent = ratio + '%';
