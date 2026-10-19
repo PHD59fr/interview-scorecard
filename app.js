@@ -1023,7 +1023,11 @@ function buildInterviewUI(config) {
           ticks: { stepSize: 25, display: false, backdropColor: 'transparent' },
           angleLines: { color: colors.grid },
           grid: { color: colors.grid },
-          pointLabels: { color: colors.text, font: { size: 11 } }
+          pointLabels: {
+            color: colors.text,
+            font: { size: 12, weight: '600' },
+            padding: 10
+          }
         }
       },
       plugins: {
@@ -1085,6 +1089,9 @@ function buildInterviewUI(config) {
 
     if (domainChartInstance) {
       domainChartInstance.data = radarData;
+      /* Tooltip callbacks close over `result`. Refresh the options too, or a
+         changed rating would keep displaying the values from the first draw. */
+      domainChartInstance.options = radarOptions;
       domainChartInstance.update();
     } else {
       domainChartInstance = new Chart(radarCanvas, { type: 'radar', data: radarData, options: radarOptions });
@@ -1092,6 +1099,8 @@ function buildInterviewUI(config) {
 
     if (ringChartInstance) {
       ringChartInstance.data = ringData;
+      /* Same principle for the answer-breakdown percentage in its tooltip. */
+      ringChartInstance.options = ringOptions;
       ringChartInstance.update();
     } else {
       ringChartInstance = new Chart(ringCanvas, { type: 'doughnut', data: ringData, options: ringOptions });
